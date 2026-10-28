@@ -11,11 +11,27 @@ from typing import List, Optional
 DB_PATH = "operations.db"
 MODEL_PATH = "models/sla_risk_engine.joblib"
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 app = FastAPI(
-    title="LamdaX SLA Risk & Operations Intelligence Engine",
+    title="Enterprise SLA Risk & Operations Intelligence Engine",
     description="Predictive API for operational bottleneck detection, SLA breach likelihood, and decision support.",
     version="1.0.0"
 )
+
+# Mount Frontend UI
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+@app.get("/", include_in_schema=False)
+def serve_dashboard():
+    index_file = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"message": "Welcome to Enterprise Operations API. Visit /docs for Swagger UI."}
+
 
 # Load Model Pipeline
 if not os.path.exists(MODEL_PATH):
@@ -65,7 +81,7 @@ def build_feature_vector(req: TicketRequest):
 def health_check():
     return {
         "status": "healthy",
-        "service": "LamdaX Operational Intelligence Microservice",
+        "service": "Enterprise Operational Intelligence Microservice",
         "models_loaded": ["RandomForestClassifier", "GradientBoostingRegressor", "TfidfVectorizer"]
     }
 

@@ -1,4 +1,4 @@
-# LamdaX Operational Decision Support & SLA Risk Engine
+# Enterprise Operational Decision Support & SLA Risk Engine
 
 An enterprise AI microservice developed to address operational bottlenecks, SLA breach risks, and automated triage for high-volume enterprise workflows.
 
